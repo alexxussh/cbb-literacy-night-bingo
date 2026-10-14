@@ -1,0 +1,239 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CBB Bears Bingo Caller</title>
+<style>
+body{margin:0;font-family:'Trebuchet MS','Comic Sans MS',Verdana,sans-serif;background:#2F6FB0;color:white;text-align:center} header{padding:18px}
+h1{font-size:42px;margin:5px;font-family:'Trebuchet MS','Comic Sans MS',Verdana,sans-serif;letter-spacing:1px}.wrap{max-width:1100px;margin:auto;padding:15px}.card{background:white;color:#2F6FB0;border-radius:20px;padding:20px;margin:15px 0}
+.bear-call{
+position:relative;
+width:270px;
+height:245px;
+margin:48px auto 18px;
+}
+.bear-ear{
+position:absolute;
+top:-27px;
+width:92px;
+height:92px;
+border-radius:50%;
+background:#2F6FB0;
+z-index:0;
+}
+.bear-ear.left{left:8px}
+.bear-ear.right{right:8px}
+.bear-ear:after{
+content:'';
+position:absolute;
+inset:13px;
+border-radius:50%;
+background:#F5A6C8;
+}
+.ball{
+position:absolute;
+inset:0;
+border-radius:48% 48% 46% 46% / 45% 45% 55% 55%;
+background:#F5A6C8;
+border:9px solid #2F6FB0;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:68px;
+font-weight:bold;
+color:#2F6FB0;
+z-index:1;
+padding-bottom:20px;
+}
+.bear-eye{
+position:absolute;
+top:70px;
+width:16px;
+height:20px;
+border-radius:50%;
+background:#173A5E;
+z-index:2;
+}
+.bear-eye.left{left:70px}
+.bear-eye.right{right:70px}
+.bear-snout{
+position:absolute;
+left:50%;
+bottom:23px;
+transform:translateX(-50%);
+width:105px;
+height:68px;
+border-radius:50%;
+background:#FBE4ED;
+border:4px solid #2F6FB0;
+z-index:2;
+}
+.bear-nose{
+position:absolute;
+left:50%;
+top:12px;
+transform:translateX(-50%);
+width:30px;
+height:21px;
+border-radius:50% 50% 55% 55%;
+background:#173A5E;
+}
+.bear-mouth{
+position:absolute;
+left:50%;
+top:31px;
+transform:translateX(-50%);
+width:34px;
+height:20px;
+border-bottom:4px solid #173A5E;
+border-radius:0 0 50% 50%;
+}
+button{border:0;border-radius:12px;padding:15px 22px;margin:5px;font-size:19px;font-weight:bold;cursor:pointer}.next{background:#F5A6C8;color:#2F6FB0}.other{background:#2F6FB0;color:white}
+.row{display:grid;grid-template-columns:50px repeat(15,1fr);gap:4px;margin:5px}.letter,.num{padding:9px 2px;border-radius:6px;font-weight:bold}.letter{background:#2F6FB0;color:white}.num{background:#F7EAF1}.called{
+background:#F5A6C8;
+outline:none;
+color:#2F6FB0;
+border-radius:50% 50% 45% 45%;
+position:relative;
+z-index:1;
+}
+.called:before,.called:after{
+content:'';
+position:absolute;
+width:42%;
+height:42%;
+background:#F5A6C8;
+border-radius:50%;
+top:-18%;
+z-index:-1;
+}
+.called:before{left:-5%}
+.called:after{right:-5%}
+#history span{display:inline-block;background:#EAF3FB;padding:6px 10px;border-radius:20px;margin:3px}
+#win{display:none;position:fixed;inset:0;background:#244F7AEE;align-items:center;justify-content:center;z-index:5}#win.show{display:flex}.winbox{background:white;color:#2F6FB0;padding:40px;border-radius:25px}.winbox h2{font-size:65px;margin:0}
+@media(max-width:750px){.row{grid-template-columns:38px repeat(15,1fr);gap:1px}.num{font-size:10px;padding:7px 0}}
+.literacy-title{
+font-family:Georgia,'Times New Roman',serif;
+font-size:30px;
+font-weight:bold;
+font-style:italic;
+letter-spacing:2px;
+margin-top:9px;
+text-shadow:1px 1px 0 #F5A6C8;
+}
+.books-line{
+font-family:Georgia,'Times New Roman',serif;
+font-size:18px;
+margin-top:4px;
+}
+.sponsor-box{
+background:#fff;
+color:#2F6FB0;
+border:3px solid #F5A6C8;
+border-radius:16px;
+padding:12px 18px;
+margin:18px auto 8px;
+max-width:900px;
+}
+.sponsor-label{
+font-family:Georgia,'Times New Roman',serif;
+font-style:italic;
+font-size:18px;
+font-weight:bold;
+letter-spacing:1px;
+}
+.sponsor-names{
+font-family:'Trebuchet MS','Comic Sans MS',Verdana,sans-serif;
+font-size:16px;
+font-weight:bold;
+margin-top:6px;
+}
+
+.play-display{display:flex;justify-content:center;align-items:center;gap:65px;flex-wrap:wrap}
+.pattern-panel{max-width:360px;flex:1;min-width:250px}
+.pattern-panel h2{font-size:30px;margin:8px 0}
+.pattern-grid{display:grid;grid-template-columns:repeat(5,42px);gap:5px;justify-content:center;margin:12px auto}
+.pattern-cell{height:42px;background:#eaf3fb;border:2px solid #9db9d6;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#234969}
+.pattern-cell.on{background:#F5A6C8;border-color:#2F6FB0;font-weight:bold}
+.pattern-head{font-weight:bold;font-size:20px}
+.pattern-panel select{font:inherit;padding:9px;border:2px solid #2F6FB0;border-radius:8px;max-width:100%}
+.pattern-rule{font-size:18px;line-height:1.4;margin:10px 0}
+.round-label{font-size:18px;font-weight:bold}
+.pattern-note{font-size:14px}
+.winbox{max-width:800px;max-height:85vh;overflow:auto}
+@media(max-width:750px){.play-display{gap:10px}}
+</style></head>
+<body><header><h1>🐾 CBB BEARS BINGO 🐾</h1><div>Clara Byrd Baker Elementary</div>
+<div class="literacy-title">❦ 📖 Literacy Night 📖 ❦</div>
+<div class="books-line">Bingo for BOOks</div></header>
+<div class="wrap"><div class="card"><div class="play-display"><div><div>CURRENT CALL</div><div class="bear-call" aria-label="Current bingo call">
+  <div class="bear-ear left"></div>
+  <div class="bear-ear right"></div>
+  <div class="ball"><span id="ball">—</span></div>
+  <div class="bear-eye left"></div>
+  <div class="bear-eye right"></div>
+  <div class="bear-snout"><div class="bear-nose"></div><div class="bear-mouth"></div></div>
+</div>
+</div><section class="pattern-panel" aria-label="Winning pattern">
+<div class="round-label" id="roundLabel"></div>
+<h2 id="patternName"></h2>
+<div id="patternGrid" class="pattern-grid" aria-label="Required squares"></div>
+<p id="patternRule" class="pattern-rule"></p>
+<label for="patternSelect">Choose this round's pattern</label><br>
+<select id="patternSelect" onchange="choosePattern(this.value)"></select>
+<p class="pattern-note">Pink squares show the winning shape. Center is FREE.<br>Pattern locks after the first call.</p>
+</section></div>
+<button class="next" onclick="callNext()">CALL NEXT NUMBER</button>
+<button class="other" onclick="winner()">🎉 BINGO!</button><button onclick="newGame()">↻ NEW GAME</button>
+<h3>All Calls This Round</h3><div id="history">Ready to play!</div></div><div class="card"><h3>Called Number Board</h3><div id="board"></div><p style="margin-bottom:0;font-size:14px">Every number called in the current round stays highlighted until you start a new game.</p></div>
+<div class="sponsor-box">
+      <div class="sponsor-label">Proudly Sponsored By</div>
+      <div class="sponsor-names">Community Partner • Community Partner • Community Partner</div>
+    </div>
+    <p>Keyboard: SPACE = next number • B = Bingo winner screen • ESC = close winner screen</p></div>
+<div id="win" onclick="closeWin()"><div class="winbox"><h2>🐻 BINGO! 🐻</h2><h3>WE HAVE A CBB WINNER!</h3><p id="winnerPattern"></p><p>Check the winning pattern and called numbers before awarding a prize.</p><p style="font-size:24px;font-weight:bold;">Please head over to the prize table to choose your prize! 🎁</p><button class="other">Continue Game</button></div></div>
+<script>
+
+let remaining=[],called=[],roundNumber=0,patternIndex=-1;
+const patterns=[
+ {name:'Letter T',rule:'Complete the top row and the middle column.',cells:[0,1,2,3,4,7,12,17,22]},
+ {name:'X Pattern',rule:'Complete BOTH diagonal lines.',cells:[0,4,6,8,12,16,18,20,24]},
+ {name:'Picture Frame',rule:'Complete all 16 squares around the outside edge.',cells:Array.from({length:25},(_,i)=>i).filter(i=>i<5||i>=20||i%5===0||i%5===4)},
+ {name:'Plus Sign',rule:'Complete the middle row and the middle column.',cells:[2,7,10,11,12,13,14,17,22]},
+ {name:'Letter L',rule:'Complete the left column and the bottom row, exactly as shown.',cells:[0,5,10,15,20,21,22,23,24]},
+ {name:'Blackout',rule:'Cover the entire card. The center is FREE.',cells:Array.from({length:25},(_,i)=>i)},
+ {name:'Four Corners',rule:'Mark all four corner squares. A quicker round.',cells:[0,4,20,24]},
+ {name:'One Line',rule:'Complete any one row, column, or diagonal. The diagram shows an example.',cells:[10,11,12,13,14]}
+];
+const rotation=[0,1,2,3,4,5];
+function renderPattern(){
+ const p=patterns[patternIndex];
+ document.getElementById('roundLabel').textContent='GAME '+roundNumber+' • WINNING PATTERN';
+ document.getElementById('patternName').textContent=p.name;
+ document.getElementById('patternRule').textContent=p.rule;
+ document.getElementById('patternGrid').innerHTML=['B','I','N','G','O'].map(l=>'<div class="pattern-head">'+l+'</div>').join('')+
+ Array.from({length:25},(_,i)=>'<div class="pattern-cell '+(p.cells.includes(i)?'on':'')+'">'+(i===12?'FREE':p.cells.includes(i)?'●':'')+'</div>').join('');
+ const select=document.getElementById('patternSelect');
+ select.value=String(patternIndex);select.disabled=called.length>0;
+ document.getElementById('winnerPattern').textContent='Winning pattern: '+p.name;
+}
+function choosePattern(value){if(called.length)return;const i=Number(value);if(Number.isInteger(i)&&patterns[i]){patternIndex=i;renderPattern()}}
+document.getElementById('patternSelect').innerHTML=patterns.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('');
+
+function tag(n){return (n<=15?'B':n<=30?'I':n<=45?'N':n<=60?'G':'O')+'-'+n}
+function board(){let s='';let letters=['B','I','N','G','O'];for(let r=0;r<5;r++){s+='<div class="row"><div class="letter">'+letters[r]+'</div>';for(let n=r*15+1;n<=r*15+15;n++)s+='<div class="num" id="n'+n+'">'+n+'</div>';s+='</div>'}document.getElementById('board').innerHTML=s}
+function callNext(){if(document.getElementById('win').classList.contains('show'))return;if(!remaining.length){alert('All 75 numbers have been called!');return}let i=Math.floor(Math.random()*remaining.length),n=remaining.splice(i,1)[0];called.push(n);renderPattern();document.getElementById('ball').textContent=tag(n);document.getElementById('n'+n).classList.add('called');document.getElementById('history').innerHTML=called.map((x,i)=>'<span>'+(i+1)+'. '+tag(x)+'</span>').join('')}
+function newGame(){
+if(called.length&&!confirm('Start a new game? This clears all called numbers and changes the winning pattern.'))return;
+roundNumber++;
+patternIndex=rotation[(roundNumber-1)%rotation.length];
+
+remaining=Array.from({length:75},(_,i)=>i+1);
+called=[];
+document.getElementById('ball').textContent='—';
+document.getElementById('history').textContent='Ready to play!';
+document.getElementById('win').classList.remove('show');
+board();
+renderPattern();
+}
+function winner(){document.getElementById('win').classList.add('show')}function closeWin(){document.getElementById('win').classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeWin();return}if(['SELECT','INPUT','TEXTAREA','BUTTON'].includes(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();callNext()}if(e.key.toLowerCase()==='b')winner();if(e.key==='Escape')closeWin()});board();newGame();
+</script></body></html>
